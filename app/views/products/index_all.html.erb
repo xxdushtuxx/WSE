@@ -2,6 +2,6 @@
 <h1>All Products</h1>
 <ul>
   <% @products.each do |product| %>
-    <li><%= link_to product.name, products_show_path %></li>
+    <li><%= product.id%>       <%= link_to product.name, products_show_path %></li>
   <% end %>
 </ul>
