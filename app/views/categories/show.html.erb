@@ -1,2 +1,9 @@
-<h1>Categories#show</h1>
-<p>Find me in app/views/categories/show.html.erb</p>
+<!-- app/views/categories/show.html.erb -->
+<h1><%= @category.name %> Products</h1>
+<ul>
+  <% @products.each do |product| %>
+    <li><%= link_to product.name, product_path(product) %></li>
+  <% end %>
+</ul>
+<%= link_to 'New Product', new_product_path %>
+<%= link_to 'Delete Category', category_path(@category), method: :delete, data: { confirm: 'Are you sure you want to delete this category?' } %>

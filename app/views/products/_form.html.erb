@@ -1,0 +1,15 @@
+<%= form_with(model: product, url: products_path) do |form| %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+
+  <%= form.label :stock %>
+  <%= form.number_field :stock %>
+
+  <%= form.label :price %>
+  <%= form.number_field :price %>
+
+  <%= form.label :category_id %>
+  <%= form.collection_select :category_id, Category.all, :id, :name %>
+
+  <%= form.submit 'Create Product' %>
+<% end %>
