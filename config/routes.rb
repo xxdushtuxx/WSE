@@ -21,4 +21,5 @@ Rails.application.routes.draw do
   resources :categories do
     resources :products
   end
+  get '/products', to: 'products#index_all', as: 'all_products'
 end
