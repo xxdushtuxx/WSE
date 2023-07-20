@@ -19,6 +19,20 @@ class ProductsController < ApplicationController
       @products = Product.all.page(params[:page]).per(20)
     end
   end
+=begin
+  # FIltering the displ
+  def on_sale
+    @products = Product.all
+  end
+
+  def new_products
+    @products = Product.where('created_at >= ?', 3.days.ago)
+  end
+
+  def recently_updated
+    @products = Product.where('updated_at >= ?', 3.days.ago)
+  end
+=end
 
   def show
     @product = Product.find(params[:id])
@@ -42,6 +56,8 @@ class ProductsController < ApplicationController
     @product.destroy
     redirect_to products_path, notice: 'Product was successfully deleted.'
   end
+
+  
 
   private
 

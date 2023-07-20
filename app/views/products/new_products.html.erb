@@ -1,0 +1,5 @@
+<!-- app/views/products/new_products.html.erb -->
+<h1>New Products</h1>
+<% @products.each do |product| %>
+  <p><%= product.name %> - <%= product.price %></p>
+<% end %>

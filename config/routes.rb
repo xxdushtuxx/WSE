@@ -14,4 +14,9 @@ Rails.application.routes.draw do
   resources :categories 
   resources :products
   #get '/products', to: 'products#index_all', as: 'all_products'
+=begin
+  get 'products/sale', to: 'products#sale', as: 'products_on_sale'
+  get 'products/new_products', to: 'products#new_products', as: 'products_new_products'
+  get 'products/recently_updated', to: 'products#recently_updated', as: 'products_recently_updated'
+=end
 end
