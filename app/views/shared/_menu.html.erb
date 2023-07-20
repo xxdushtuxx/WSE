@@ -29,9 +29,9 @@
           <a class="nav-link" href="#">Contact Us</a>
         </li>
       </ul>
-      <form class="d-flex" method="GET" action="#">
-        <select class="form-select" aria-label="Default select example">
-            <option selected>all</option>
+      <form class="d-flex" method="GET" action="<%= products_path %>">
+        <select class="form-select" name="category_id" aria-label="Default select example">
+            <option value="">All</option>
             <% @categories.each do |category| %>
             <option value="<%= category.id %>"><%= category.name %></option>
             <% end %>

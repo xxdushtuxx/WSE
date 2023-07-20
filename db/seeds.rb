@@ -1,4 +1,4 @@
-
+=begin
 # Helper method to create random soccer equipment products
 def create_product(category_id)
     Product.create(
@@ -26,4 +26,8 @@ def create_product(category_id)
       create_product(category.id)
     end
   end
-  
+=end
+  # Update descriptions for existing products
+Product.all.each do |product|
+    product.update(description: Faker::Lorem.paragraph)
+  end
