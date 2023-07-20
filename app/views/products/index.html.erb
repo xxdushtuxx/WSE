@@ -1,6 +1,10 @@
 <h1>All Products</h1>
 
-
+<%= link_to 'Products on Sale', products_path(sale_status: 'yes') %>
+<br>
+<%= link_to 'New Products', products_path(new_product: "yes") %>
+<br>
+<%= link_to 'Recently Updated Products', products_path(recently_updated: "yes") %>
 <br>
 <br>
 <ul>

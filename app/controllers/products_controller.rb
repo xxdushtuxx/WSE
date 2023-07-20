@@ -18,6 +18,18 @@ class ProductsController < ApplicationController
     else
       @products = Product.all.page(params[:page]).per(20)
     end
+
+    if params[:sale_status] == "yes"
+      @products = @products.where(sale_status: "yes")
+    elsif params[:new_product] == "yes"
+      @products = @products.where('created_at >= ?', 1.days.ago)
+    elsif params[:recently_updated] == "yes"
+      @products = @products.where('updated_at >= ?', 3.days.ago)
+    end
+
+    
+
+
   end
 =begin
   # FIltering the displ
