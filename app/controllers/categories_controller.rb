@@ -5,7 +5,7 @@ class CategoriesController < ApplicationController
 
   def show
     @category = Category.find(params[:id])
-    @products = @category.products
+    @products = @category.products.page(params[:page]).per(10)
   end
 
   def new
@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
 
   def products
     @category = Category.find(params[:id])
-    @products = @category.products#.page(params[:page]).per(10)
+    @products = @category.products.page(params[:page]).per(10)
   
     render 'products', locals: { products: @products }
   end

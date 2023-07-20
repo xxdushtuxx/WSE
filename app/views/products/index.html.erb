@@ -4,3 +4,5 @@
     <li><%= product.id%>   |    <%= link_to product.name, product_path(product) %></li>
   <% end %>
 </ul>
+
+<%= paginate @products %>
