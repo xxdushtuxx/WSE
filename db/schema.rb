@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_19_072719) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_162120) do
   create_table "admins", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_072719) do
     t.decimal "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "sale_status"
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
