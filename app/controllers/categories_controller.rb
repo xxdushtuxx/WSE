@@ -27,6 +27,13 @@ class CategoriesController < ApplicationController
     redirect_to categories_path, notice: 'Category was successfully deleted.'
   end
 
+  def products
+    @category = Category.find(params[:id])
+    @products = @category.products#.page(params[:page]).per(10)
+  
+    render 'products', locals: { products: @products }
+  end
+
   private
 
   def category_params
