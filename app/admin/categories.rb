@@ -24,8 +24,12 @@ ActiveAdmin.register Category do
 
   # Ensure the collection is paginated properly for the index action
   controller do
-    def scoped_collection
-      Category.page(params[:page]).per(10)
+    before_action do
+      params[:page] ||= 1 if request.format == 'text/html'
     end
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "description", "id", "name", "updated_at"]
   end
 end
