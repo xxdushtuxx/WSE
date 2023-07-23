@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
   def index
-    @categories = Category.all
+    @categories = Category.page(params[:page]).per(10)
   end
 
   def show
@@ -25,13 +25,6 @@ class CategoriesController < ApplicationController
     @category = Category.find(params[:id])
     @category.destroy
     redirect_to categories_path, notice: 'Category was successfully deleted.'
-  end
-
-  def products
-    @category = Category.find(params[:id])
-    @products = @category.products.page(params[:page]).per(10)
-  
-    render 'products', locals: { products: @products }
   end
 
   private
