@@ -26,8 +26,10 @@ def create_product(category_id)
       create_product(category.id)
     end
   end
-=end
+
   # Update descriptions for existing products
 Product.all.each do |product|
     product.update(description: Faker::Lorem.paragraph)
-  end
+end
+=end
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
