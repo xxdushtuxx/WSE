@@ -1,6 +1,6 @@
 # app/admin/product.rb
 ActiveAdmin.register Product do
-  actions :index, :edit, :update, :create, :destroy
+  #actions :index, :edit, :update, :create, :destroy
   # Permit necessary attributes for CRUD actions
   permit_params :name, :description, :stock, :price, :sale_status, :category_id
 
