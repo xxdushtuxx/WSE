@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="<%= root_path %>">Home</a>
+          <a class="nav-link active" aria-current="page" href="<%= root_path %>" style="text-decoration: none;">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">About</a>
@@ -20,7 +20,7 @@
             Categories
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <% @categories.each do |category| %>
+          <% @product_categories.each do |category| %>
             <li><a class="dropdown-item" href="<%= categories_products_path(category) %>"><%= category.name %></a></li>
             <% end %>
           </ul>
@@ -32,7 +32,7 @@
       <form class="d-flex" method="GET" action="<%= products_path %>">
         <select class="form-select" name="category_id" aria-label="Default select example">
             <option value="">All</option>
-            <% @categories.each do |category| %>
+            <% @product_categories.each do |category| %>
             <option value="<%= category.id %>"><%= category.name %></option>
             <% end %>
         </select>

@@ -17,7 +17,5 @@ ActiveAdmin.register Product do
     f.actions
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["category_id", "created_at", "description", "id", "name", "price", "sale_status", "stock", "updated_at"]
-  end
+
 end

@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     private
 
     def set_categories
-      @categories = Category.all
+      @product_categories = Category.all
     end
 
   end

@@ -52,6 +52,7 @@ gem 'faker'
 gem 'kaminari'
 gem 'activeadmin'
 gem 'devise'
+gem 'ransack'
 
 
 group :development, :test do
