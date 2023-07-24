@@ -32,4 +32,22 @@ Product.all.each do |product|
     product.update(description: Faker::Lorem.paragraph)
 end
 =end
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+#AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+
+require 'net/http'
+require 'json'
+
+url = URI('https://api.salestaxapi.ca/v2/province/all')
+response = Net::HTTP.get(url)
+data = JSON.parse(response)
+
+data.each do |province_code, province_data|
+  Province.create(
+    name: province_code,
+    pst: province_data['pst'],
+    hst: province_data['hst'],
+    gst: province_data['gst'],
+    applicable: province_data['applicable']
+  )
+end
+
