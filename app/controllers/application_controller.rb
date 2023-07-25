@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
 
     before_action :set_categories
+    helper_method :current_customer, :logged_in?
 =begin
     helper_method :current_admin, :logged_in?
   
@@ -22,6 +23,16 @@ class ApplicationController < ActionController::Base
     def set_categories
       @product_categories = Category.all
     end
+
+    
+
+  def current_customer
+    @current_customer ||= Customer.find_by(id: session[:customer_id])
+  end
+
+  def logged_in?
+    !current_customer.nil?
+  end
 
   end
   

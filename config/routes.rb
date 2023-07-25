@@ -6,9 +6,9 @@ Rails.application.routes.draw do
   get 'contact', to: 'static_pages#contact'
 
   get 'admin_dashboard/index'
-  get 'login', to: 'sessions#new'
-  post 'login', to: 'sessions#create'
-  get 'logout', to: 'sessions#destroy'
+  #get 'login', to: 'sessions#new'
+  #post 'login', to: 'sessions#create'
+  
 
   get 'categories/:id/products', to: 'categories#products', as: 'categories_products'
 
@@ -21,4 +21,11 @@ Rails.application.routes.draw do
   get 'products/new_products', to: 'products#new_products', as: 'products_new_products'
   get 'products/recently_updated', to: 'products#recently_updated', as: 'products_recently_updated'
 =end
+
+resources :customers, only: [:new, :create]
+  get 'login', to: 'customers#login_form'
+  post 'login', to: 'customers#login'
+  get '/signup', to: 'customers#new', as: 'signup'
+  post '/signup', to: 'customers#create'
+  get 'logout', to: 'customers#logout'
 end
