@@ -11,11 +11,14 @@
 <ul>
   <% @products.each do |product| %>
     <li><%= product.id %> | <%= link_to product.name, product_path(product) %> </li>
-    <% if @cart.include?(product.id) %>
+    <% if @cart.include?(product) %>
       <p>Product is in your cart</p>
     <% else %>
-      <p><%= link_to "add to cart", add_to_cart_path(product), method: :post %></p>
+      <%= form_with url: add_to_cart_path(product.id), method: :post do |form| %>
+        <%= form.submit "Add to cart" %>
+      <% end %>
     <% end %>
   <% end %>
 </ul>
+
 <%= paginate @products %>
