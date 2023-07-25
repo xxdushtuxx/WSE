@@ -6,11 +6,16 @@
 <br>
 <%= link_to 'Recently Updated Products', products_path(recently_updated: "yes") %>
 <br>
+<%= debug session[:cart] %>
 <br>
 <ul>
   <% @products.each do |product| %>
-    <li><%= product.id%>   |    <%= link_to product.name, product_path(product) %></li>
+    <li><%= product.id %> | <%= link_to product.name, product_path(product) %> </li>
+    <% if @cart.include?(product.id) %>
+      <p>Product is in your cart</p>
+    <% else %>
+      <p><%= link_to "add to cart", add_to_cart_path(product), method: :post %></p>
+    <% end %>
   <% end %>
 </ul>
-
 <%= paginate @products %>

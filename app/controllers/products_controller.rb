@@ -1,4 +1,7 @@
 class ProductsController < ApplicationController
+  before_action :initialize_cart_session
+  before_action :load_cart
+
   def index
     @categories = Category.all
     @category_id = params[:category_id]
@@ -26,25 +29,7 @@ class ProductsController < ApplicationController
     elsif params[:recently_updated] == "yes"
       @products = @products.where('updated_at >= ?', 3.days.ago)
     end
-
-    
-
-
   end
-=begin
-  # FIltering the displ
-  def on_sale
-    @products = Product.all
-  end
-
-  def new_products
-    @products = Product.where('created_at >= ?', 3.days.ago)
-  end
-
-  def recently_updated
-    @products = Product.where('updated_at >= ?', 3.days.ago)
-  end
-=end
 
   def show
     @product = Product.find(params[:id])
@@ -69,11 +54,24 @@ class ProductsController < ApplicationController
     redirect_to products_path, notice: 'Product was successfully deleted.'
   end
 
-  
+  def add_to_cart
+    id = params[:id].to_i  
+    session[:cart] << id unless session[:cart].include?(id)
+    redirect_to root_path
+  end
 
   private
 
   def product_params
     params.require(:product).permit(:name, :stock, :price, :category_id)
   end
+
+  def initialize_cart_session
+    session[:cart] ||= []
+  end
+
+  def load_cart
+    @cart = Product.find(session[:cart])
+  end
+
 end
