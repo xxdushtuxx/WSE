@@ -1,11 +1,26 @@
+<!-- app/views/carts/inde.html.erb -->
 <%= debug session[:cart] %>
 
 <details>
-    <summary>
-        <ul>
-            <% @cart.each do |product| %>
-            <li><%= product.name %></li>
-            <% end %>
-        </ul>
-    </summary>
+  <summary>
+    <ul>
+      <% @cart.each do |cart_item| %>
+        <li><%= "#{cart_item[:product].name} - #{cart_item[:quantity]}" %></li>
+      <% end %>
+    </ul>
+  </summary>
 </details>
+<!-- app/views/carts/index.html.erb -->
+<h1>Cart</h1>
+<ul>
+  <% @cart.each do |cart_item| %>
+    <li>
+      <%= "#{cart_item[:product].name} - #{cart_item[:quantity]}" %>
+      <%= form_with url: update_quantity_product_path(cart_item[:product].id), method: :patch do |form| %>
+        <%= form.number_field :quantity, value: cart_item[:quantity], min: 1 %>
+        <%= form.submit "Update" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+

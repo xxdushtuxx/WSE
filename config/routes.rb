@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   get '/cart', to: 'carts#index'
 
-  post '/carts/add_to_cart/:id', to: 'carts#add_to_cart', as: 'add_to_cart'
-  delete '/carts/remove_from_cart/:id', to: 'carts#remove_from_cart', as: 'remove_from_cart'
+  post '/products/add_to_cart/:id', to: 'products#add_to_cart', as: 'add_to_cart'
+  delete '/products/remove_from_cart/:id', to: 'products#remove_from_cart', as: 'remove_from_cart_product'
+  patch '/products/update_quantity/:id', to: 'products#update_quantity', as: 'update_quantity_product'
+
 end

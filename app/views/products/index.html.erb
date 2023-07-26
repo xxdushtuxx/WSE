@@ -11,12 +11,14 @@
   <% @products.each do |product| %>
     <li><%= product.id %> | <%= link_to product.name, product_path(product) %> </li>
     <% if @cart.include?(product) %>
-      <p>Product is in your cart - <%= button_to 'remove from cart', remove_from_cart_path(product.id), method: :delete %></p>
+      <p>Product is in your cart - <%= button_to 'remove from cart', remove_from_cart_product_path(product.id), method: :delete %></p>
       
     <% else %>
       <%= form_with url: add_to_cart_path(product.id), method: :post do |form| %>
-        <%= form.submit "Add to cart" %>
-      <% end %>
+      <%= form.number_field :quantity, value: 1, min: 1 %>
+      <%= form.submit "Add to cart" %>
+    <% end %>
+
     <% end %>
   <% end %>
 </ul>
