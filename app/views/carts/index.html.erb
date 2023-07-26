@@ -1,0 +1,11 @@
+<%= debug session[:cart] %>
+
+<details>
+    <summary>
+        <ul>
+            <% @cart.each do |product| %>
+            <li><%= product.name %></li>
+            <% end %>
+        </ul>
+    </summary>
+</details>

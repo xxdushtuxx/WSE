@@ -1,7 +1,11 @@
 class CartsController < ApplicationController
     before_action :initialize_cart_session
     before_action :load_cart
-    
+
+    def index
+        load_cart
+    end
+
     def add_to_cart
         id = params[:id].to_i  
         session[:cart] << id unless session[:cart].include?(id)
