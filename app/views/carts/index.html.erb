@@ -20,6 +20,7 @@
         <%= form.number_field :quantity, value: cart_item[:quantity], min: 1 %>
         <%= form.submit "Update" %>
       <% end %>
+      <%= button_to 'remove from cart', remove_from_cart_path(cart_item[:product].id), method: :delete %>
     </li>
   <% end %>
 </ul>
