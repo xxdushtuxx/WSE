@@ -3,8 +3,9 @@ class CartsController < ApplicationController
     before_action :load_cart
 
     def index
-        load_cart
-    end
+        cart_ids = session[:cart].map { |item| item["id"] }
+        @cart_items = Product.where(id: cart_ids)
+      end
 
     def add_to_cart
         id = params[:id].to_i  

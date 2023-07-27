@@ -61,6 +61,7 @@ class ProductsController < ApplicationController
     session[:cart] << { id: id, quantity: quantity } unless session[:cart].any? { |item| item[:id] == id }
     redirect_to products_path
   end
+  
 
   def remove_from_cart
     id = params[:id].to_i
@@ -68,31 +69,33 @@ class ProductsController < ApplicationController
     puts "Product ID to remove: #{id}"
     puts "Cart before removal: #{session[:cart].inspect}"
   
-    session[:cart].delete(id)
+    session[:cart].delete_if { |item| item["id"] == id }
   
     puts "Cart after removal: #{session[:cart].inspect}"
   
     redirect_to products_path
   end
+  
 
   def update_quantity
     product_id = params[:id].to_i
     quantity = params[:quantity].to_i
   
-    cart_item = session[:cart].find { |item| item["id"] == product_id }
+    cart_item = session[:cart].find { |item| item[:id] == product_id }
   
     puts "Product ID: #{product_id}"
-    puts "Cart: #{session[:cart].inspect}"
+    puts "Cart Item Before Update: #{cart_item.inspect}"
   
     if cart_item
-      cart_item["quantity"] = quantity
+      cart_item[:quantity] = quantity
       flash[:notice] = "Quantity updated successfully."
     else
       flash[:error] = "Product not found in the cart."
     end
   
-
-    redirect_to cart_path
+    puts "Cart Item After Update: #{cart_item.inspect}"
+    
+    redirect_to products_path
   end
 
   private
