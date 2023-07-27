@@ -81,7 +81,7 @@ class ProductsController < ApplicationController
     product_id = params[:id].to_i
     quantity = params[:quantity].to_i
   
-    cart_item = session[:cart].find { |item| item[:id] == product_id }
+    cart_item = session[:cart].find { |item| item["id"] == product_id }
   
     puts "Product ID: #{product_id}"
     puts "Cart Item Before Update: #{cart_item.inspect}"
@@ -95,7 +95,7 @@ class ProductsController < ApplicationController
   
     puts "Cart Item After Update: #{cart_item.inspect}"
     
-    redirect_to products_path
+    redirect_to cart_path
   end
 
   private
