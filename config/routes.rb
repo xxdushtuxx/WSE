@@ -24,5 +24,6 @@ Rails.application.routes.draw do
   delete '/products/remove_from_cart/:id', to: 'products#remove_from_cart', as: 'remove_from_cart'
   patch '/products/update_quantity/:id', to: 'products#update_quantity', as: 'update_quantity_product'
 
-  #get '/checkout', to: 'products#checkout', as: 'checkout'
+  post '/checkout', to: 'orders#checkout', as: 'checkout'
+  get '/invoice', to: 'orders#index', as: 'invoice'
 end
