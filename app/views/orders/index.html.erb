@@ -1,0 +1,45 @@
+<h1>Customer Details</h1>
+<p><strong>First Name:</strong> <%= @customer.first_name %></p>
+<p><strong>Last Name:</strong> <%= @customer.last_name %></p>
+<p><strong>Email:</strong> <%= @customer.email %></p>
+<p><strong>Phone:</strong> <%= @customer.phone %></p>
+
+<h1>Edit Address for Order Delivery</h1>
+<%= form_with model: @customer, url: update_address_path(@customer.id), local: true do |form| %>
+  <div>
+    <%= form.label :address %>
+    <%= form.text_field :address, required: true %>
+  </div>
+  <div>
+    <%= form.label :city %>
+    <%= form.text_field :city, required: true %>
+  </div>
+  <div>
+    <%= form.label :postal_code %>
+    <%= form.text_field :postal_code, required: true %>
+  </div>
+  <div>
+    <%= form.label :province_id %>
+    <%= form.select :province_id, options_for_select(Province.all.map { |province| [province.name, province.id] }, @customer.province_id), prompt: 'Select Province', required: true %>
+  </div>
+  <p>Please note that updating the address will change the address in the record.</p>
+  <%= form.submit "Update Address" %>
+<% end %> <!-- Close the form tag here -->
+
+
+  <div class="notice"><%= notice %></div>
+
+
+<h1>Order Details</h1>
+<ul>
+  <% sub_total_price = 0 %>
+  <% session[:cart].each do |item| %>
+    <% product = Product.find(item["id"]) %>
+    <% item_price = product.price * item["quantity"].to_i %>
+    <% sub_total_price += item_price %>
+    <li><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
+  <% end %>
+</ul>
+<p>Sub Total Price: $<%= sub_total_price %></p>
+<p>Tax ( <%= @customer.province.name %> - <%= @customer.province.applicable %> % ): $<%= (sub_total_price * @customer.province.applicable).round(2) %></p>
+<p>Total Price (including tax): $<%= (sub_total_price * (1 + @customer.province.applicable)).round(2) %></p>

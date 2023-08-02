@@ -38,11 +38,24 @@ class CustomersController < ApplicationController
         session[:customer_id] = nil
         redirect_to root_path, notice: 'Logged out successfully!'
     end
+
+    def update_address
+      @customer = current_customer
+      puts "Current customer ID: #{current_customer&.id}"
+      puts "Customer params: #{customer_params}"
+      
+      if @customer.update(customer_params)
+        redirect_to invoice_path(@customer.id), notice: 'Address updated successfully.'
+      else
+        render :edit
+      end
+    end
+    
   
     private
   
     def customer_params
-        params.require(:customer).permit(:first_name, :last_name, :email, :phone, :address, :city, :postal_code, :province_id, :password)
-      end
+      params.require(:customer).permit(:address, :city, :postal_code, :province_id)
+    end
   end
   

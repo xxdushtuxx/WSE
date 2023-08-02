@@ -1,8 +1,11 @@
 class OrdersController < ApplicationController
     before_action :check_authentication
+    #before_action :order_details
     
     def index
-      @orders = current_customer.orders
+      #@orders = current_customer.orders
+      #@invoice = 
+      @customer = current_customer
     end
   
     def show
@@ -35,5 +38,22 @@ class OrdersController < ApplicationController
         end
       end
     
+    def order_details 
+        #@user_details = { province_id: current_customer.province_id, firstname: current_customer.firstname,  lastname: current_customer.lastname,  email: current_customer.email, phone: current_customer.phone, address: current_customer.address, city: current_customer.city}
+=begin        @order_details = {}
+        session[:cart].each do |item|
+          id = item[:id]
+          quantity = item[:quantity]
+          puts "ID: #{id}, Quantity: #{quantity}"
+
+          @product = Product.find(id)
+
+          #@order_details += {product_name: @product.name, @product}
+        end
+
+        @user = Customer.find(current_customer.id)
+=end
+
+    end
   end
   
