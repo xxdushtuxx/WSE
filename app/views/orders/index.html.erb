@@ -43,3 +43,5 @@
 <p>Sub Total Price: $<%= sub_total_price %></p>
 <p>Tax ( <%= @customer.province.name %> - <%= @customer.province.applicable %> % ): $<%= (sub_total_price * @customer.province.applicable).round(2) %></p>
 <p>Total Price (including tax): $<%= (sub_total_price * (1 + @customer.province.applicable)).round(2) %></p>
+
+<%= button_to 'Proceed to Payment', proceed_to_payment_path, method: :post %>

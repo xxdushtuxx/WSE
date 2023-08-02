@@ -1,0 +1,12 @@
+<!-- app/views/orders/payment.html.erb -->
+<h1>Payment Details for Order <%= @order.id %></h1>
+<!-- Add payment form or integration with a payment gateway here -->
+<!-- For example, you can use a form to collect credit card information, etc. -->
+
+<!-- Display order details -->
+<h2>Order Details:</h2>
+<p>Order ID: <%= @order.id %></p>
+<p>Total Price: $<%= @order.total_price %></p>
+<p>Tax: $<%= @order.tax %></p>
+
+<!-- Add any other order details you want to display here -->

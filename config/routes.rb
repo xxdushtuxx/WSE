@@ -29,4 +29,7 @@ Rails.application.routes.draw do
 
   post '/checkout', to: 'orders#checkout', as: 'checkout'
   get '/orders/index', to: 'orders#index', as: 'invoice'
+
+  post '/proceed_to_payment', to: 'orders#proceed_to_payment', as: 'proceed_to_payment'
+  get '/orders/:id/payment', to: 'orders#payment', as: 'payment'
 end

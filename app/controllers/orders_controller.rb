@@ -26,6 +26,30 @@ class OrdersController < ApplicationController
       end
     end
   
+    def proceed_to_payment
+      # Create the order record
+      @order = current_customer.orders.build
+      @order.total_price = calculate_total_price
+      @order.tax = calculate_tax_amount
+      @order.status = 'new' # Assuming the default status is 'new'
+      @order.save
+  
+      # Create the orderItems records
+      session[:cart].each do |item|
+        product = Product.find(item["id"])
+        quantity = item["quantity"].to_i
+        order_item = @order.order_items.build(product: product, quantity: quantity, cost: product.price * quantity)
+        order_item.save
+      end
+  
+      # Redirect the customer to the payment page with the order ID
+      redirect_to payment_path(@order.id)
+    end
+
+    def payment
+      @order = Order.find(params[:id])
+    end
+    
     private
   
     def order_params
@@ -38,22 +62,26 @@ class OrdersController < ApplicationController
         end
       end
     
-    def order_details 
-        #@user_details = { province_id: current_customer.province_id, firstname: current_customer.firstname,  lastname: current_customer.lastname,  email: current_customer.email, phone: current_customer.phone, address: current_customer.address, city: current_customer.city}
-=begin        @order_details = {}
+      def calculate_total_price
+        # Calculate the total price here based on the order items and any other applicable charges.
+        # You can use the same logic as you used to calculate the sub_total_price and tax in the view.
+        # For simplicity, let's assume the total price is just the sub_total_price.
+        sub_total_price = 0
         session[:cart].each do |item|
-          id = item[:id]
-          quantity = item[:quantity]
-          puts "ID: #{id}, Quantity: #{quantity}"
-
-          @product = Product.find(id)
-
-          #@order_details += {product_name: @product.name, @product}
+          product = Product.find(item["id"])
+          item_price = product.price * item["quantity"].to_i
+          sub_total_price += item_price
         end
-
-        @user = Customer.find(current_customer.id)
-=end
-
-    end
+        sub_total_price
+      end
+    
+      def calculate_tax_amount
+        # Calculate the tax amount based on the customer's province and the sub_total_price.
+        # For simplicity, let's assume the tax rate is stored in the Province model and is called 'applicable'.
+        tax_rate = current_customer.province.applicable
+        sub_total_price = calculate_total_price
+        tax_amount = sub_total_price * tax_rate
+        tax_amount.round(2) # Round to two decimal places
+      end
   end
   

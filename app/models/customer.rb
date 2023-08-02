@@ -1,5 +1,6 @@
 class Customer < ApplicationRecord
   belongs_to :province
+  has_many :orders
   has_secure_password
   validates :first_name, :last_name, :email, :phone, :address, :city, :postal_code, presence: true
   validates :first_name, :last_name, length: { maximum: 50 }
@@ -13,6 +14,6 @@ class Customer < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["province"]
+    ["province", "orders"]
   end
 end
