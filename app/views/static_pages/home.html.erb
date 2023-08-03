@@ -4,6 +4,7 @@
   <% end %>
 <% if logged_in? %>
       <%= link_to 'Log Out', logout_path, method: :delete %>
+      <%= link_to 'My Profile', my_profile_path %>
     <% else %>
       <%= link_to 'Login', login_path %>
     <% end %>

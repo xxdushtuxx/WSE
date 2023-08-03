@@ -2,9 +2,15 @@ class CustomersController < ApplicationController
     def new
       @customer = Customer.new
     end
+
+    def show
+      @customer = current_customer
+      @orders = @customer.orders.includes(:order_items)
+
+    end
   
     def create
-      @customer = Customer.new(customer_params)
+      @customer = Customer.new(customer_all_params)
   
       if @customer.save
         # Handle successful signup
@@ -56,6 +62,9 @@ class CustomersController < ApplicationController
   
     def customer_params
       params.require(:customer).permit(:address, :city, :postal_code, :province_id)
+    end
+    def customer_all_params
+      params.require(:customer).permit(:first_name, :last_name, :email, :phone, :address, :city, :postal_code, :province_id, :password)
     end
   end
   

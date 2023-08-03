@@ -1,0 +1,19 @@
+<!-- app/views/profiles/show.html.erb -->
+<h1>Welcome, <%= @customer.first_name %>!</h1>
+
+<h2>My Details</h2>
+<p>Email: <%= @customer.email %></p>
+<!-- Add other customer details as needed -->
+
+<h2>Past Orders</h2>
+<% @orders.each do |order| %>
+  <h3>Order ID: <%= order.id %></h3>
+  <p>Order Date: <%= order.created_at.strftime('%b %d, %Y') %></p>
+
+  <h4>Order Items</h4>
+  <ul>
+    <% order.order_items.each do |order_item| %>
+      <li><%= order_item.product.name %> - Quantity: <%= order_item.quantity %> - Price: <%= number_to_currency(order_item.cost) %></li>
+    <% end %>
+  </ul>
+<% end %>

@@ -30,6 +30,12 @@ Rails.application.routes.draw do
   post '/checkout', to: 'orders#checkout', as: 'checkout'
   get '/orders/index', to: 'orders#index', as: 'invoice'
 
-  post '/proceed_to_payment', to: 'orders#proceed_to_payment', as: 'proceed_to_payment'
-  get '/orders/:id/payment', to: 'orders#payment', as: 'payment'
+  #post '/proceed_to_payment', to: 'orders#proceed_to_payment', as: 'proceed_to_payment'
+  #get '/orders/:id/payment', to: 'orders#payment', as: 'payment'
+  get '/proceed_to_payment', to: 'orders#proceed_to_payment', as: :proceed_to_payment
+  get '/order_success/:id', to: 'orders#order_success', as: :order_success
+  get '/order_cancel/:id', to: 'orders#order_cancel', as: :order_cancel
+
+  get '/my_profile', to: 'customers#show', as: 'my_profile'
+
 end
