@@ -46,8 +46,12 @@
 <p>PST: <%= (sub_total_price * @customer.province.pst).round(2) %></p>
 <p>HST: <%= (sub_total_price * @customer.province.hst).round(2) %></p>
 
+<%= taxes = (sub_total_price * @customer.province.gst).round(2) + (sub_total_price * @customer.province.pst).round(2) + (sub_total_price * @customer.province.hst).round(2) %>
+<p>Taxes - <%= taxes %></p>
 <p>Tax ( <%= @customer.province.name %> - <%= @customer.province.applicable %> % ): $<%= (sub_total_price * @customer.province.applicable).round(2) %></p>
 <p>Total Price (including tax): $<%= (sub_total_price * (1 + @customer.province.applicable)).round(2) %></p>
+
+<p>New Total Price (including tax): $<%= (sub_total_price * taxes).round(2) %></p>
 
 
 <div data-turbo="false">

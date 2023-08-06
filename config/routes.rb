@@ -38,4 +38,8 @@ Rails.application.routes.draw do
 
   get '/my_profile', to: 'customers#show', as: 'my_profile'
 
+  resources :contact_pages, only: [:show]
+  resources :about_pages, only: [:show]
+
+  
 end

@@ -31,6 +31,7 @@ class CustomersController < ApplicationController
   
       if @customer && @customer.authenticate(params[:password])
         # Successful login
+        session.delete(:cart)
         session[:customer_id] = @customer.id
         redirect_to root_path, notice: 'Login successful!'
       else
@@ -42,6 +43,7 @@ class CustomersController < ApplicationController
 
     def logout
         session[:customer_id] = nil
+        session.delete(:cart)
         redirect_to root_path, notice: 'Logged out successfully!'
     end
 

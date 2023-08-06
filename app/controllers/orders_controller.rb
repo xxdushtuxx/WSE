@@ -62,6 +62,7 @@ class OrdersController < ApplicationController
         }
       end
     
+      
       # Create a Stripe Session with the line items
       stripe_session = Stripe::Checkout::Session.create(
         payment_method_types: ['card'],
@@ -83,13 +84,14 @@ class OrdersController < ApplicationController
       # Retrieve the order and update its status as paid or perform any other actions needed
       @order = Order.find(params[:id])
       @order.update(status: 'paid')
+      session.delete(:cart)
       # redirect_to order_success_path(@order), notice: 'Payment successful! Your order is now paid.'
     end
   
     def order_cancel
       # Handle the case where the user cancels the payment or any other necessary actions
       @order = Order.find(params[:id])
-      redirect_to order_path(@order), alert: 'Payment canceled. Your order was not processed.'
+      #redirect_to order_path(@order), alert: 'Payment canceled. Your order was not processed.'
     end
 
     private
@@ -116,7 +118,7 @@ class OrdersController < ApplicationController
         end
         sub_total_price
       end
-    
+=begin
       def calculate_tax_amount
         # Calculate the tax amount based on the customer's province and the sub_total_price.
         # For simplicity, let's assume the tax rate is stored in the Province model and is called 'applicable'.
@@ -125,7 +127,8 @@ class OrdersController < ApplicationController
         tax_amount = sub_total_price * tax_rate
         tax_amount.round(2) # Round to two decimal places
       end
-=begin
+=end
+
 def calculate_tax_amount
   # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
   province = current_customer.province
@@ -147,8 +150,9 @@ def calculate_tax_amount
   hst_amount = hst_amount.round(2)
 
   tax_amount = pst_amount + gst_amount + hst_amount
+  tax_amount.round(2)
 end
 
-=end
+
   end
   
