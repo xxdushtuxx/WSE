@@ -30,6 +30,7 @@ class OrdersController < ApplicationController
       # Create the order record
       @order = current_customer.orders.build
       @order.total_price = calculate_total_price
+      @order.province = current_customer.province
       @order.tax = calculate_tax_amount
       @order.status = 'new' # Assuming the default status is 'new'
       @order.save
@@ -129,29 +130,29 @@ class OrdersController < ApplicationController
       end
 =end
 
-def calculate_tax_amount
-  # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
-  province = current_customer.province
-  pst_rate = province.pst_rate
-  gst_rate = province.gst_rate
-  hst_rate = province.hst_rate
+    def calculate_tax_amount
+      # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
+      province = current_customer.province
+      pst_rate = province.pst_rate
+      gst_rate = province.gst_rate
+      hst_rate = province.hst_rate
 
-  # Calculate the sub_total_price (replace this line with your own calculation method)
-  sub_total_price = calculate_total_price
+      # Calculate the sub_total_price (replace this line with your own calculation method)
+      sub_total_price = calculate_total_price
 
-  # Calculate the tax amounts for each tax rate
-  pst_amount = sub_total_price * pst_rate
-  gst_amount = sub_total_price * gst_rate
-  hst_amount = sub_total_price * hst_rate
+      # Calculate the tax amounts for each tax rate
+      pst_amount = sub_total_price * pst_rate
+      gst_amount = sub_total_price * gst_rate
+      hst_amount = sub_total_price * hst_rate
 
-  # Round each tax amount to two decimal places
-  pst_amount = pst_amount.round(2)
-  gst_amount = gst_amount.round(2)
-  hst_amount = hst_amount.round(2)
+      # Round each tax amount to two decimal places
+      pst_amount = pst_amount.round(2)
+      gst_amount = gst_amount.round(2)
+      hst_amount = hst_amount.round(2)
 
-  tax_amount = pst_amount + gst_amount + hst_amount
-  tax_amount.round(2)
-end
+      tax_amount = pst_amount + gst_amount + hst_amount
+      tax_amount.round(2)
+    end
 
 
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_165713) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_06_204211) do
   create_table "about_pages", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -91,6 +91,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_165713) do
     t.datetime "updated_at", null: false
     t.string "status", default: "new"
     t.decimal "tax", precision: 10, scale: 2, default: "0.0"
+    t.string "province"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
