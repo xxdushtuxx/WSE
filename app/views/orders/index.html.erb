@@ -1,3 +1,4 @@
+<% if logged_in? %>
 <h1>Customer Details</h1>
 <p><strong>First Name:</strong> <%= @customer.first_name %></p>
 <p><strong>Last Name:</strong> <%= @customer.last_name %></p>
@@ -57,3 +58,46 @@
 <div data-turbo="false">
 <%= button_to 'Proceed to Payment', proceed_to_payment_path, method: :get %>
 </div>
+<% else %>
+
+<% if session[:non_user_address].present? && session[:non_user_city].present? && session[:non_user_postal_code].present? && session[:non_user_province_id].present? %>
+<h2>Order address</h2>
+  <p><strong>Address:</strong> <%= session[:non_user_address] %></p>
+  <p><strong>City:</strong> <%= session[:non_user_city] %></p>
+  <p><strong>Postal Code:</strong> <%= session[:non_user_postal_code] %></p>
+  <p><strong>Province:</strong> <%= Province.find_by_id(session[:non_user_province_id])&.name %></p>
+
+  <h1>Order Details</h1>
+<ul>
+  <% sub_total_price = 0 %>
+  <% session[:cart].each do |item| %>
+    <% product = Product.find(item["id"]) %>
+    <% item_price = product.price * item["quantity"].to_i %>
+    <% sub_total_price += item_price %>
+    <li><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
+  <% end %>
+</ul>
+  <% selected_province = Province.find_by_id(session[:non_user_province_id]) %>
+  <p>GST: <%= (sub_total_price * selected_province.gst).round(2) %></p>
+  <p>PST: <%= (sub_total_price * selected_province.pst).round(2) %></p>
+  <p>HST: <%= (sub_total_price * selected_province.hst).round(2) %></p>
+
+  <% taxes = (sub_total_price * selected_province.gst).round(2) +
+            (sub_total_price * selected_province.pst).round(2) +
+            (sub_total_price * selected_province.hst).round(2) %>
+  <p>Taxes - <%= taxes %></p>
+  <p>Tax ( <%= selected_province.name %> - <%= selected_province.applicable %> % ): $<%= (sub_total_price * selected_province.applicable).round(2) %></p>
+  <p>Total Price (including tax): $<%= (sub_total_price * (1 + selected_province.applicable)).round(2) %></p>
+  <p>New Total Price (including tax): $<%= (sub_total_price * taxes).round(2) %></p>
+
+  <div data-turbo="false">
+  <%= button_to 'Proceed to Payment', non_user_proceed_to_payment_path, method: :get %>
+  </div>
+<% else %>
+  
+  <p>You need to provide your address to proceed with the order.</p>
+  <p>Please note that this order you cannot change the address that you are providing now.</p> 
+  <p>You will have to add address for every order since you are not registered customer.</p>
+<% end %>
+
+<% end %>

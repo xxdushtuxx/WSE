@@ -6,7 +6,7 @@ ActiveAdmin.register_page 'CustomersWithOrders' do
       customers = Customer.includes(orders: { order_items: :product })
   
       customers.each do |customer|
-        panel "Customer: #{customer.first_name} #{customer.first_name}" do
+        panel "Customer: #{customer.first_name} #{customer.last_name}" do
           table_for customer.orders do
             column 'Order ID', :id
             column 'Order Date', :created_at

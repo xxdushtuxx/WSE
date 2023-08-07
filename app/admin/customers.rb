@@ -1,5 +1,5 @@
 ActiveAdmin.register Customer do
-  permit_params :province_id, :first_name, :last_name, :email, :phone, :address, :city, :postal_code
+  permit_params :province_id, :first_name, :last_name, :email, :phone, :address, :city, :postal_code, :password_digest
 
   form do |f|
     f.semantic_errors # This line will display error messages on top of the form if there are any validation errors.
@@ -12,6 +12,7 @@ ActiveAdmin.register Customer do
       f.input :address
       f.input :city
       f.input :postal_code
+      f.input :password_digest
     end
     f.actions
   end

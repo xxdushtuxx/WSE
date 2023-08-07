@@ -95,6 +95,75 @@ class OrdersController < ApplicationController
       #redirect_to order_path(@order), alert: 'Payment canceled. Your order was not processed.'
     end
 
+    def non_logged_in_address
+      # Extract the form parameters from the submission
+      address = params[:address]
+      city = params[:city]
+      postal_code = params[:postal_code]
+      province_id = params[:province_id]
+    
+      # Store the form parameters in session variables
+      session[:non_user_address] = address
+      session[:non_user_city] = city
+      session[:non_user_postal_code] = postal_code
+      session[:non_user_province_id] = province_id
+    
+      # Redirect or render as needed
+      redirect_to checkout_path # Redirect to the appropriate path
+    end
+    
+    def non_user_proceed_to_payment
+      # Create the order record using session data
+      non_user = Customer.find_by_id(5)
+      @order = non_user.orders.build
+      @order.total_price = calculate_total_price
+      @order.province = Province.find_by_id(session[:non_user_province_id])
+      @order.tax = calculate_tax_amount
+      @order.status = 'new' # Assuming the default status is 'new'
+      @order.save # Save the order to generate an ID
+
+      # Create the orderItems records
+      session[:cart].each do |item|
+        product = Product.find(item["id"])
+        quantity = item["quantity"].to_i
+        order_item = @order.order_items.build(product: product, quantity: quantity, cost: product.price * quantity)
+        order_item.save
+      end
+        
+      Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+        
+      # Calculate the total price in cents for Stripe
+      total_price_in_cents = (@order.total_price * 100).to_i # Convert to cents and ensure it's an integer
+        
+      # Build the line items array for the Stripe Checkout session
+      line_items = session[:cart].map do |item|
+        product = Product.find(item["id"])
+        {
+          price_data: {
+            currency: 'cad', # Replace 'usd' with your desired currency
+            product_data: {
+              name: product.name, # Use the product name from the database
+            },
+            unit_amount: (product.price * 100).to_i, # Convert product price to cents
+          },
+          quantity: item["quantity"].to_i,
+        }
+      end
+        
+      # Create a Stripe Session with the line items
+      stripe_session = Stripe::Checkout::Session.create(
+        payment_method_types: ['card'],
+        line_items: line_items,
+        mode: 'payment',
+        success_url: order_success_url(@order), # Use the newly saved order instance
+        cancel_url: order_cancel_url(@order),   # Replace with the URL where users should be redirected if they cancel the payment
+      )
+        
+      # Redirect the customer to the Stripe Checkout page
+      redirect_to stripe_session.url, status: :see_other, allow_other_host: true
+    end
+    
+
     private
   
     def order_params
@@ -130,29 +199,38 @@ class OrdersController < ApplicationController
       end
 =end
 
-    def calculate_tax_amount
-      # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
-      province = current_customer.province
-      pst_rate = province.pst
-      gst_rate = province.gst
-      hst_rate = province.hst
+def calculate_tax_amount
+  # Calculate the sub_total_price (replace this line with your own calculation method)
+  sub_total_price = calculate_total_price
 
-      # Calculate the sub_total_price (replace this line with your own calculation method)
-      sub_total_price = calculate_total_price
+  if logged_in?
+    # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
+    province = current_customer.province
+    pst_rate = province.pst
+    gst_rate = province.gst
+    hst_rate = province.hst
+  else
+    # Fetch the selected province from session for non-logged-in users
+    province = Province.find_by_id(session[:non_user_province_id])
+    pst_rate = province.pst
+    gst_rate = province.gst
+    hst_rate = province.hst
+  end
 
-      # Calculate the tax amounts for each tax rate
-      pst_amount = sub_total_price * pst_rate
-      gst_amount = sub_total_price * gst_rate
-      hst_amount = sub_total_price * hst_rate
+  # Calculate the tax amounts for each tax rate
+  pst_amount = sub_total_price * pst_rate
+  gst_amount = sub_total_price * gst_rate
+  hst_amount = sub_total_price * hst_rate
 
-      # Round each tax amount to two decimal places
-      pst_amount = pst_amount.round(2)
-      gst_amount = gst_amount.round(2)
-      hst_amount = hst_amount.round(2)
+  # Round each tax amount to two decimal places
+  pst_amount = pst_amount.round(2)
+  gst_amount = gst_amount.round(2)
+  hst_amount = hst_amount.round(2)
 
-      tax_amount = pst_amount + gst_amount + hst_amount
-      tax_amount.round(2)
-    end
+  tax_amount = pst_amount + gst_amount + hst_amount
+  tax_amount.round(2)
+end
+
 
 
   end
