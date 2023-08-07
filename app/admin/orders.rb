@@ -1,5 +1,5 @@
 ActiveAdmin.register Order do
-  permit_params :customer_id, :total_price, :status, :tax
+  permit_params :customer_id, :total_price, :status, :tax, :province_id
 
   # Add any other columns you want to display in the index view
   index do
@@ -8,6 +8,7 @@ ActiveAdmin.register Order do
     column :customer
     column :total_price
     column :status
+    column :province
     column :tax
     actions
   end
@@ -23,6 +24,7 @@ ActiveAdmin.register Order do
       f.input :customer
       f.input :total_price
       f.input :status, as: :select, collection: ['new', 'paid', 'shipped']
+      f.input :province_id, as: :select, collection: Province.all.map { |province| [province.name, province.id] }, prompt: 'Select Province'
       f.input :tax
     end
     f.actions

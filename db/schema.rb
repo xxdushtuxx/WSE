@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_06_204211) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_06_205452) do
   create_table "about_pages", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -91,8 +91,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_06_204211) do
     t.datetime "updated_at", null: false
     t.string "status", default: "new"
     t.decimal "tax", precision: 10, scale: 2, default: "0.0"
-    t.string "province"
+    t.integer "province_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["province_id"], name: "index_orders_on_province_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -121,5 +122,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_06_204211) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "customers"
+  add_foreign_key "orders", "provinces"
   add_foreign_key "products", "categories"
 end

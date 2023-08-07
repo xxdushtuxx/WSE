@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-    before_action :check_authentication
+    #before_action :check_authentication
     #before_action :order_details
     
     def index
@@ -133,9 +133,9 @@ class OrdersController < ApplicationController
     def calculate_tax_amount
       # Fetch the customer's province and corresponding tax rates (PST, GST, HST)
       province = current_customer.province
-      pst_rate = province.pst_rate
-      gst_rate = province.gst_rate
-      hst_rate = province.hst_rate
+      pst_rate = province.pst
+      gst_rate = province.gst
+      hst_rate = province.hst
 
       # Calculate the sub_total_price (replace this line with your own calculation method)
       sub_total_price = calculate_total_price
