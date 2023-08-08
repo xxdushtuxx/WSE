@@ -61,11 +61,18 @@
 <% else %>
 
 <% if session[:non_user_address].present? && session[:non_user_city].present? && session[:non_user_postal_code].present? && session[:non_user_province_id].present? %>
+<% if session[:change_address] == true %>
+    <%= render partial: 'shared/non_user_address_form', locals: { form: form_with(model: Customer.new) } %>
+<% else %>
+
+
 <h2>Order address</h2>
   <p><strong>Address:</strong> <%= session[:non_user_address] %></p>
   <p><strong>City:</strong> <%= session[:non_user_city] %></p>
   <p><strong>Postal Code:</strong> <%= session[:non_user_postal_code] %></p>
   <p><strong>Province:</strong> <%= Province.find_by_id(session[:non_user_province_id])&.name %></p>
+  
+<%= button_to 'Change Address', change_address_path, method: :get %>
 
   <h1>Order Details</h1>
 <ul>
@@ -93,8 +100,10 @@
   <div data-turbo="false">
   <%= button_to 'Proceed to Payment', non_user_proceed_to_payment_path, method: :get %>
   </div>
+  <% end %>
 <% else %>
-  
+  <%= render partial: 'shared/non_user_address_form', locals: { form: form } %>
+
   <p>You need to provide your address to proceed with the order.</p>
   <p>Please note that this order you cannot change the address that you are providing now.</p> 
   <p>You will have to add address for every order since you are not registered customer.</p>

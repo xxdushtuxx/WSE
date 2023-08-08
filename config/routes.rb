@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   patch '/customers/:id/update_address', to: 'customers#update_address', as: :update_address
 
   post '/orders/address', to: 'orders#non_logged_in_address', as: :non_user_address
+  get '/change_address', to: 'orders#change_address', as: 'change_address'
+
 
   post '/checkout', to: 'orders#checkout', as: 'checkout'
   get '/orders/index', to: 'orders#index', as: 'invoice'

@@ -92,10 +92,14 @@ class OrdersController < ApplicationController
     def order_cancel
       # Handle the case where the user cancels the payment or any other necessary actions
       @order = Order.find(params[:id])
+      session.delete(:cart)
       #redirect_to order_path(@order), alert: 'Payment canceled. Your order was not processed.'
     end
 
     def non_logged_in_address
+      if session[:change_address] == true
+        session[:change_address] = false
+      end
       # Extract the form parameters from the submission
       address = params[:address]
       city = params[:city]
@@ -158,11 +162,18 @@ class OrdersController < ApplicationController
         success_url: order_success_url(@order), # Use the newly saved order instance
         cancel_url: order_cancel_url(@order),   # Replace with the URL where users should be redirected if they cancel the payment
       )
-        
+      session.delete(:non_user_province_id)
+      session.delete(:non_user_city)
+      session.delete(:non_user_postal_code)
+      session.delete(:non_user_address)
       # Redirect the customer to the Stripe Checkout page
       redirect_to stripe_session.url, status: :see_other, allow_other_host: true
     end
     
+    def change_address
+      session[:change_address] = true
+      redirect_to checkout_path
+    end
 
     private
   
