@@ -6,10 +6,14 @@ ActiveAdmin.register Order do
     selectable_column
     id_column
     column :customer
-    column :total_price
     column :status
     column :province
+    column :hst
+    column :gst
+    column :pst
     column :tax
+    column :sub_total
+    column :total_price
     actions
   end
 
@@ -23,8 +27,12 @@ ActiveAdmin.register Order do
     f.inputs do
       f.input :customer
       f.input :total_price
+      f.input :sub_total
       f.input :status, as: :select, collection: ['new', 'paid', 'shipped']
       f.input :province_id, as: :select, collection: Province.all.map { |province| [province.name, province.id] }, prompt: 'Select Province'
+      f.input :hst
+      f.input :gst
+      f.input :pst
       f.input :tax
     end
     f.actions

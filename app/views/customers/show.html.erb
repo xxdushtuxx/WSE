@@ -32,7 +32,11 @@
           </ul>
 
            <div class="mt-3">
+           <p><strong>GST:</strong> <%= number_to_currency(order.gst) %></p>
+           <p><strong>PST:</strong> <%= number_to_currency(order.pst) %></p>
+           <p><strong>HST:</strong> <%= number_to_currency(order.hst) %></p>
             <p><strong>Tax:</strong> <%= number_to_currency(order.tax) %></p>
+            <p><strong>Sub Total:</strong> <%= number_to_currency(order.total_price-order.tax) %></p>
             <p><strong>Grand Total:</strong> <%= number_to_currency(order.total_price) %></p>
           </div>
 

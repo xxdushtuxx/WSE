@@ -27,12 +27,28 @@ class OrdersController < ApplicationController
     end
   
     def proceed_to_payment
+      sub_total_price = 0
+        session[:cart].each do |item|
+          product = Product.find(item["id"])
+          item_price = product.price * item["quantity"].to_i
+          sub_total_price += item_price
+        end
       # Create the order record
       @order = current_customer.orders.build
       @order.total_price = calculate_total_price
       @order.province = current_customer.province
+
+      gst_rate = current_customer.province.gst
+      pst_rate = current_customer.province.pst
+      hst_rate = current_customer.province.hst
+
+      # Calculate tax amounts
+      @order.gst = (sub_total_price * gst_rate).round(2)
+      @order.hst = (sub_total_price * hst_rate).round(2)
+      @order.pst = (sub_total_price * pst_rate).round(2)
       @order.tax = calculate_tax_amount
-      @order.status = 'new' # Assuming the default status is 'new'
+      @order.sub_total = calculate_total_price - calculate_tax_amount
+      @order.status = 'new'
       @order.save
     
       # Create the orderItems records
@@ -126,14 +142,31 @@ class OrdersController < ApplicationController
     end
     
     def non_user_proceed_to_payment
+      sub_total_price = 0
+        session[:cart].each do |item|
+          product = Product.find(item["id"])
+          item_price = product.price * item["quantity"].to_i
+          sub_total_price += item_price
+        end
       # Create the order record using session data
       non_user = Customer.find_by_id(5)
       @order = non_user.orders.build
       @order.total_price = calculate_total_price
       @order.province = Province.find_by_id(session[:non_user_province_id])
+      # Fetch tax rates from the province object
+      province = Province.find_by_id(session[:non_user_province_id])
+      gst_rate = province.gst
+      pst_rate = province.pst
+      hst_rate = province.hst
+
+      # Calculate tax amounts
+      @order.gst = (sub_total_price * gst_rate).round(2)
+      @order.hst = (sub_total_price * hst_rate).round(2)
+      @order.pst = (sub_total_price * pst_rate).round(2)
       @order.tax = calculate_tax_amount
+      @order.sub_total = calculate_total_price - calculate_tax_amount
       @order.status = 'new'
-      @order.save 
+      @order.save
 
       # Create the orderItems records
       session[:cart].each do |item|

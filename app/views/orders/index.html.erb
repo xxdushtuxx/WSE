@@ -7,7 +7,7 @@
     <p><strong>Phone:</strong> <%= @customer.phone %></p>
 
     <h1>Edit Address for Order Delivery</h1>
-    <%= form_with model: @customer, url: update_address_path(@customer.id), local: true do |form| %>
+    <%= form_with model: @customer, url: update_address_path(@customer.id),method: :get, local: true do |form| %>
       <div class="form-group">
         <%= form.label :address %>
         <%= form.text_field :address, required: true, class: "form-control" %>
@@ -39,12 +39,12 @@
       <% end %>
     </ul>
 
-    <p class="mt-3">Sub Total Price: $<%= sub_total_price %></p>
+    <p>Sub Total Price: $<%= sub_total_price %></p>
 
     <p>GST: <%= (sub_total_price * @customer.province.gst).round(2) %></p>
     <p>PST: <%= (sub_total_price * @customer.province.pst).round(2) %></p>
     <p>HST: <%= (sub_total_price * @customer.province.hst).round(2) %></p>
-    <%= taxes = (sub_total_price * @customer.province.gst).round(2) + (sub_total_price * @customer.province.pst).round(2) + (sub_total_price * @customer.province.hst).round(2) %>
+    <% taxes = (sub_total_price * @customer.province.gst).round(2) + (sub_total_price * @customer.province.pst).round(2) + (sub_total_price * @customer.province.hst).round(2) %>
     <p>Tax (<%= @customer.province.name %>) - <%= taxes %></p>
 
     <p>Total Price (including tax): $<%= (sub_total_price + taxes).round(2) %></p>

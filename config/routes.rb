@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   delete '/products/remove_from_cart/:id', to: 'products#remove_from_cart', as: :remove_from_cart
   get '/products/update_quantity/:id', to: 'products#update_quantity', as: :update_quantity_product
 
-  patch '/customers/:id/update_address', to: 'customers#update_address', as: :update_address
+  get '/customers/:id/update_address', to: 'customers#update_address', as: :update_address
 
   get '/orders/address', to: 'orders#non_logged_in_address', as: :non_user_address
   get '/change_address', to: 'orders#change_address', as: 'change_address'

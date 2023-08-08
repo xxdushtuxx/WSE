@@ -58,7 +58,8 @@ class CustomersController < ApplicationController
       puts "Customer params: #{customer_params}"
       
       if @customer.update(customer_params)
-        redirect_to invoice_path(@customer.id), notice: 'Address updated successfully.'
+        flash[:notice] = 'Address updated successfully.'
+        redirect_to invoice_path(@customer.id) 
       else
         render :edit
       end
