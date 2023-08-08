@@ -1,36 +1,43 @@
-<h1>Sign Up</h1>
+<h1 class="mb-3">Sign Up</h1>
+<%= form_with model: @customer, url: customers_path, class: "mb-3",method: :get, local: true do |form| %>
+  <div class="mb-3">
+    <%= form.label :first_name, class: "form-label" %>
+    <%= form.text_field :first_name, class: "form-control", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :last_name, class: "form-label" %>
+    <%= form.text_field :last_name, class: "form-control", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :email, class: "form-label" %>
+    <%= form.email_field :email, class: "form-control", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :phone, class: "form-label" %>
+    <%= form.telephone_field :phone, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :address, class: "form-label" %>
+    <%= form.text_field :address, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :city, class: "form-label" %>
+    <%= form.text_field :city, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :postal_code, class: "form-label" %>
+    <%= form.text_field :postal_code, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :province_id, class: "form-label" %>
+    <%= form.collection_select :province_id, Province.all, :id, :name, { prompt: "Select a province" }, class: "form-select", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :password, class: "form-label" %>
+    <%= form.password_field :password, class: "form-control", required: true %>
+  </div>
 
-<%= form_with(model: @customer, url: customers_path) do |form| %>
-  <%= form.label :first_name %>
-  <%= form.text_field :first_name, required: true %>
-<br>
-  <%= form.label :last_name %>
-  <%= form.text_field :last_name, required: true %>
-<br>
-  <%= form.label :email %>
-  <%= form.email_field :email, required: true %>
-<br>
-  <%= form.label :phone %>
-  <%= form.text_field :phone, type: "tel" %>
-<br>
-  <%= form.label :address %>
-  <%= form.text_field :address %>
-<br>
-  <%= form.label :city %>
-  <%= form.text_field :city %>
-<br>
-  <%= form.label :postal_code %>
-  <%= form.text_field :postal_code %>
-<br>
-  <%= form.label :province_id %>
-  <%= form.select :province_id, Province.all.collect { |p| [p.name, p.id] }, prompt: "Select a province", required: true %>
-<br>
-  <%= form.label :password %>
-  <%= form.password_field :password, required: true %>
-<br>
-
-<br>
-  <%= form.submit 'Sign Up' %>
+  <%= form.submit 'Sign Up', class: "btn btn-primary" %>
 <% end %>
 
 <%= link_to 'Login', login_path %>

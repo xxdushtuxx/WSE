@@ -90,6 +90,14 @@ class OrdersController < ApplicationController
     end
   
     def order_cancel
+=begin
+      if !logged_in?
+        session.delete(:non_user_province_id)
+        session.delete(:non_user_city)
+        session.delete(:non_user_postal_code)
+        session.delete(:non_user_address)
+      end
+=end
       # Handle the case where the user cancels the payment or any other necessary actions
       @order = Order.find(params[:id])
       session.delete(:cart)
@@ -98,6 +106,7 @@ class OrdersController < ApplicationController
 
     def non_logged_in_address
       if session[:change_address] == true
+        flash[:notice] = "Address changed!"
         session[:change_address] = false
       end
       # Extract the form parameters from the submission
@@ -123,8 +132,8 @@ class OrdersController < ApplicationController
       @order.total_price = calculate_total_price
       @order.province = Province.find_by_id(session[:non_user_province_id])
       @order.tax = calculate_tax_amount
-      @order.status = 'new' # Assuming the default status is 'new'
-      @order.save # Save the order to generate an ID
+      @order.status = 'new'
+      @order.save 
 
       # Create the orderItems records
       session[:cart].each do |item|
@@ -144,11 +153,11 @@ class OrdersController < ApplicationController
         product = Product.find(item["id"])
         {
           price_data: {
-            currency: 'cad', # Replace 'usd' with your desired currency
+            currency: 'cad', 
             product_data: {
-              name: product.name, # Use the product name from the database
+              name: product.name, 
             },
-            unit_amount: (product.price * 100).to_i, # Convert product price to cents
+            unit_amount: (product.price * 100).to_i,
           },
           quantity: item["quantity"].to_i,
         }
@@ -159,8 +168,8 @@ class OrdersController < ApplicationController
         payment_method_types: ['card'],
         line_items: line_items,
         mode: 'payment',
-        success_url: order_success_url(@order), # Use the newly saved order instance
-        cancel_url: order_cancel_url(@order),   # Replace with the URL where users should be redirected if they cancel the payment
+        success_url: order_success_url(@order), 
+        cancel_url: order_cancel_url(@order),   
       )
       session.delete(:non_user_province_id)
       session.delete(:non_user_city)

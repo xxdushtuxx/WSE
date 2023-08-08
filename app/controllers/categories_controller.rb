@@ -1,4 +1,6 @@
 class CategoriesController < ApplicationController
+  before_action :initialize_cart_session
+  before_action :load_cart
   def index
     @categories = Category.page(params[:page]).per(10)
   end
@@ -38,5 +40,13 @@ class CategoriesController < ApplicationController
 
   def category_params
     params.require(:category).permit(:name, :description)
+  end
+  def initialize_cart_session
+    session[:cart] ||= []
+  end
+
+  def load_cart
+    cart_ids = session[:cart].map { |item| item["id"] }
+    @cart = Product.where(id: cart_ids)
   end
 end

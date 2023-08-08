@@ -1,30 +1,36 @@
-<!-- app/views/carts/inde.html.erb -->
-<%= debug session[:cart] %>
-
-<details>
-  <summary>
-    <ul>
+<div class="container mt-5">
+  <h1>Cart</h1>
+  <% if @cart.empty? %>
+    <p>Your cart is empty.</p>
+  <% else %>
+    <ul class="list-group">
       <% @cart.each do |cart_item| %>
-        <li><%= "#{cart_item[:product].name} - #{cart_item[:quantity]}" %></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <%= "#{cart_item[:product].name} - #{cart_item[:quantity]}" %>
+          </div>
+          <div class="d-flex align-items-center">
+            <%= form_with url: update_quantity_product_path(cart_item[:product].id), method: :get, class: 'form-inline' do |form| %>
+              <div class="input-group">
+                <%= form.number_field :quantity, min: 1, class: 'form-control', id: "quantity_#{cart_item[:product].id}" %>
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </div>
+            <% end %>
+            <form action="<%= remove_from_cart_path(cart_item[:product].id) %>" method="post" class="form-inline ml-3">
+              <input type="hidden" name="_method" value="delete" />
+              <button type="submit" class="btn btn-danger">Remove</button>
+            </form>
+          </div>
+        </li>
       <% end %>
     </ul>
-  </summary>
-</details>
-<!-- app/views/carts/index.html.erb -->
-<h1>Cart</h1>
-<ul>
-  <% @cart.each do |cart_item| %>
-    <li>
-      <%= "#{cart_item[:product].name} - #{cart_item[:quantity]}" %>
-      <%= form_with url: update_quantity_product_path(cart_item[:product].id), method: :patch do |form| %>
-        <%= form.number_field :quantity, value: cart_item[:quantity], min: 1 %>
-        <%= form.submit "Update" %>
-      <% end %>
-      <%= button_to 'remove from cart', remove_from_cart_path(cart_item[:product].id), method: :delete %>
-    </li>
-  <% end %>
-</ul>
 
-<%= form_tag invoice_path, method: :get do %>
-  <%= submit_tag "Checkout" %>
-<% end %>
+    <div class="d-flex justify-content-end mt-3 mx-4">
+      <%= form_tag invoice_path, method: :get do %>
+        <%= submit_tag "Checkout", class: 'btn btn-success' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

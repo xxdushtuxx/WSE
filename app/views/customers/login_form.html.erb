@@ -1,13 +1,26 @@
-<h1>Login</h1>
-
-<%= form_tag login_path do %>
-  <%= label_tag :email %>
-  <%= email_field_tag :email, nil, required: true %>
-
-  <%= label_tag :password %>
-  <%= password_field_tag :password, nil, required: true %>
-
-  <%= submit_tag 'Login' %>
-<% end %>
-
-<%= link_to 'Sign Up', new_customer_path %>
+<div class="container mt-5">
+			<div class="row justify-content-center">
+				<div class="col-md-6">
+					<div class="card shadow-lg">
+						<div class="card-header">
+							<h2 class="text-center">WSE Login Form</h2>
+						</div>
+						<div class="card-body">
+							<form method="POST" action="<%= login_path %>" class="mb-3" id="login">
+								<div class="mb-3">
+									<label for="email" class="form-label">Email:</label>
+									<input type="email" id="email" name="email" class="form-control" required>
+								</div>
+								<div class="mb-3">
+									<label for="password" class="form-label">Password:</label>
+									<input type="password" id="password" name="password" class="form-control" required>
+								</div>
+								<button type="submit" class="btn btn-success w-100">Login</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="text-center my-3">Don't have an account? <%= link_to 'Sign up', new_customer_path, class: "text-decoration-none" %> here!</p>
+		

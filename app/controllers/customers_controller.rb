@@ -10,11 +10,13 @@ class CustomersController < ApplicationController
     end
   
     def create
+      puts "In here"
       @customer = Customer.new(customer_all_params)
   
-      if @customer.save
+    if @customer.save
         # Handle successful signup
-        redirect_to root_path, notice: 'Signup successful!'
+        flash[:notice] = 'Signup successful!'
+        redirect_to root_path
       else
         # Handle signup errors
         render :new
@@ -33,10 +35,12 @@ class CustomersController < ApplicationController
         # Successful login
         session.delete(:cart)
         session[:customer_id] = @customer.id
-        redirect_to root_path, notice: 'Login successful!'
+        session[:welcome_message_displayed] = true
+        redirect_to root_path#, notice: 'Login successful!'
       else
         # Failed login
-        flash.now[:alert] = 'Invalid email or password'
+        #flash.now[:alert] = 'Invalid email or password'
+        flash[:notice] = 'Invalid email or password'
         render :login_form
       end
     end
@@ -44,7 +48,8 @@ class CustomersController < ApplicationController
     def logout
         session[:customer_id] = nil
         session.delete(:cart)
-        redirect_to root_path, notice: 'Logged out successfully!'
+        flash[:notice] = 'Logged out successfully!'
+        redirect_to root_path#, notice: 'Logged out successfully!'
     end
 
     def update_address

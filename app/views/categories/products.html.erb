@@ -1,17 +1,49 @@
-<div class="container">
-    <% if products.present? %>
-  <h2>Characters by <%= @category.name %></h2>
-  <ul>
-    <% products.each do |product| %>
-      <li>
-        <%= link_to product.name, product_path(product) %>
+<h2 class="text-center">All Products <strong>(<%= @category.name %>)</strong></h2>
+
+<div class="row">
+  <div class="col-12 mx-2">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <p class="text-center text-light bg-dark m-0">To see more information about a product, simply click on its name.</p>
       </li>
-    <% end %>
-  </ul>
-<% else %>
-  <div class="text-center">
-        No products found.
-    </div>
-<% end %>
-<%= paginate @products %>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>ID | Products</strong>
+          <strong style="display: none;">nothing</strong>
+          <strong class="text-center mx-2">Cart-Action</strong>
+        </div>
+      </li>
+      <% if @products.present? %>
+        <% @products.each do |product| %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <%= link_to product_path(product), class: 'text-decoration-none text-dark' do %>
+              <%= product.id %> | <%= product.name %>
+            <% end %>
+            
+            <div class="btn-group">
+              <% if @cart.include?(product) %>
+                <span class="badge bg-success d-flex align-items-center justify-content-center mb-2">Product is in your cart</span>
+                <%= form_with url: remove_from_cart_path(product.id), method: :delete, class: 'form-inline' do |form| %>
+                  <button type="submit" class="btn btn-danger btn-sm mr-4">Remove from cart</button>
+                <% end %>
+              <% else %>
+                <%= form_with url: add_to_cart_path(product.id), method: :get, class: 'form-inline' do |form| %>
+                  <div class="input-group">
+                    <%= form.number_field :quantity, min: 1, class: 'form-control', required: true, id: "quantity_#{product.id}" %>
+                    <button type="submit" class="btn btn-primary">Add to cart</button>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="list-group-item text-center">No products found.</li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="my-5">
+  <%= paginate @products %>
 </div>

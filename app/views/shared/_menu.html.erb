@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">WinnipegSportsEmporium</a>
+    <a class="navbar-brand" href="<%= root_path %>" style="text-decoration: none;">WinnipegSportsEmporium</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -10,24 +10,35 @@
           <a class="nav-link active" aria-current="page" href="<%= root_path %>" style="text-decoration: none;">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<%= products_path %>">Products</a>
+          <a class="nav-link" href="<%= products_path %>" style="text-decoration: none;">Products</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="<%= categories_path %>" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="<%= categories_path %>" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
             Categories
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
           <% @product_categories.each do |category| %>
-            <li><a class="dropdown-item" href="<%= categories_products_path(category) %>"><%= category.name %></a></li>
+            <li>
+            <a class="dropdown-item" href="<%= categories_products_path(category) %>" style="text-decoration: none;"><%= category.name %></a>
+            </li>
             <% end %>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Contact Us</a>
+          <a class="nav-link" href="<%= cart_path %>" style="text-decoration: none;">Cart</a>
         </li>
+        <li class="nav-item">
+        <% if logged_in? %>
+          <a class="nav-link" href="<%= logout_path %>" style="text-decoration: none;">Log-out</a>
+        <% else %>
+          <a class="nav-link" href="<%= login_path %>" style="text-decoration: none;">Log-in</a>
+        <% end %>
+        </li>
+        <% if logged_in? %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= my_profile_path %>" style="text-decoration: none;">My Profile</a>
+        </li>
+        <% end %>
       </ul>
       <form class="d-flex" method="GET" action="<%= products_path %>">
         <select class="form-select" name="category_id" aria-label="Default select example">
@@ -37,7 +48,7 @@
             <% end %>
         </select>
         <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-success text-light" type="submit">Search</button>
       </form>
     </div>
   </div>

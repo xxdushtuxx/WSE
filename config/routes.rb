@@ -14,27 +14,25 @@ Rails.application.routes.draw do
   resources :customers, only: [:new, :create]
   get 'login', to: 'customers#login_form'
   post 'login', to: 'customers#login'
-  get '/signup', to: 'customers#new', as: 'signup'
-  post '/signup', to: 'customers#create'
+  get '/signup', to: 'customers#new', as: :signup
+  get '/customers', to: 'customers#create', as: :create_customer
   get 'logout', to: 'customers#logout'
 
   get '/cart', to: 'carts#index'
 
-  post '/products/add_to_cart/:id', to: 'products#add_to_cart', as: 'add_to_cart'
-  delete '/products/remove_from_cart/:id', to: 'products#remove_from_cart', as: 'remove_from_cart'
-  patch '/products/update_quantity/:id', to: 'products#update_quantity', as: 'update_quantity_product'
+  get '/products/add_to_cart/:id', to: 'products#add_to_cart', as: :add_to_cart
+  delete '/products/remove_from_cart/:id', to: 'products#remove_from_cart', as: :remove_from_cart
+  get '/products/update_quantity/:id', to: 'products#update_quantity', as: :update_quantity_product
 
   patch '/customers/:id/update_address', to: 'customers#update_address', as: :update_address
 
-  post '/orders/address', to: 'orders#non_logged_in_address', as: :non_user_address
+  get '/orders/address', to: 'orders#non_logged_in_address', as: :non_user_address
   get '/change_address', to: 'orders#change_address', as: 'change_address'
 
 
   post '/checkout', to: 'orders#checkout', as: 'checkout'
   get '/orders/index', to: 'orders#index', as: 'invoice'
 
-  #post '/proceed_to_payment', to: 'orders#proceed_to_payment', as: 'proceed_to_payment'
-  #get '/orders/:id/payment', to: 'orders#payment', as: 'payment'
   get '/non_user_proceed_to_payment', to: 'orders#non_user_proceed_to_payment', as: :non_user_proceed_to_payment
   get '/proceed_to_payment', to: 'orders#proceed_to_payment', as: :proceed_to_payment
   get '/order_success/:id', to: 'orders#order_success', as: :order_success

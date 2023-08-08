@@ -9,5 +9,8 @@ class Province < ApplicationRecord
     def self.ransackable_attributes(auth_object = nil)
       ["id", "name", "pst", "hst", "gst", "applicable"]
     end
+    def self.ransackable_associations(auth_object = nil)
+      ["orders"]
+    end
   end
   

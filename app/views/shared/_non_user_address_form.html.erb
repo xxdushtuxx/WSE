@@ -1,19 +1,21 @@
-<%= form_with url: non_user_address_path, method: :post do |form| %>
-  <div>
-    <%= form.label :address %>
-    <%= form.text_field :address, required: true %>
+<%= form_with url: non_user_address_path, method: :get, class: 'needs-validation', novalidate: true do |form| %>
+  <div class="mb-3">
+    <%= form.label :address, class: 'form-label' %>
+    <%= form.text_field :address, class: 'form-control', required: true %>
   </div>
-  <div>
-    <%= form.label :city %>
-    <%= form.text_field :city, required: true %>
+  <div class="mb-3">
+    <%= form.label :city, class: 'form-label' %>
+    <%= form.text_field :city, class: 'form-control', required: true %>
   </div>
-  <div>
-    <%= form.label :postal_code %>
-    <%= form.text_field :postal_code, required: true %>
+  <div class="mb-3">
+    <%= form.label :postal_code, class: 'form-label' %>
+    <%= form.text_field :postal_code, class: 'form-control', required: true %>
   </div>
-  <div>
-    <%= form.label :province_id %>
-    <%= form.select :province_id, options_for_select(Province.all.map { |province| [province.name, province.id] }), prompt: 'Select Province', required: true %>
+  <div class="mb-3">
+    <%= form.label :province_id, class: 'form-label' %>
+    <%= form.select :province_id, options_for_select(Province.all.map { |province| [province.name, province.id] }), { prompt: 'Select Province', class: 'form-select', required: true } %>
   </div>
-  <%= form.submit "Save Address" %>
+  <div class="mb-3">
+    <%= form.submit "Save Address", class: 'btn btn-primary' %>
+  </div>
 <% end %>

@@ -1,112 +1,105 @@
 <% if logged_in? %>
-<h1>Customer Details</h1>
-<p><strong>First Name:</strong> <%= @customer.first_name %></p>
-<p><strong>Last Name:</strong> <%= @customer.last_name %></p>
-<p><strong>Email:</strong> <%= @customer.email %></p>
-<p><strong>Phone:</strong> <%= @customer.phone %></p>
+  <div class="container">
+    <h1>Customer Details</h1>
+    <p><strong>First Name:</strong> <%= @customer.first_name %></p>
+    <p><strong>Last Name:</strong> <%= @customer.last_name %></p>
+    <p><strong>Email:</strong> <%= @customer.email %></p>
+    <p><strong>Phone:</strong> <%= @customer.phone %></p>
 
-<h1>Edit Address for Order Delivery</h1>
-<%= form_with model: @customer, url: update_address_path(@customer.id), local: true do |form| %>
-  <div>
-    <%= form.label :address %>
-    <%= form.text_field :address, required: true %>
+    <h1>Edit Address for Order Delivery</h1>
+    <%= form_with model: @customer, url: update_address_path(@customer.id), local: true do |form| %>
+      <div class="form-group">
+        <%= form.label :address %>
+        <%= form.text_field :address, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :city %>
+        <%= form.text_field :city, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :postal_code %>
+        <%= form.text_field :postal_code, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :province_id %>
+        <%= form.select :province_id, options_for_select(Province.all.map { |province| [province.name, province.id] }, @customer.province_id), prompt: 'Select Province', required: true, class: "form-control" %>
+      </div>
+      <p>Please note that updating the address will change the address in the record.</p>
+      <%= form.submit "Update Address", class: "btn btn-primary" %>
+    <% end %>
+
+    <h1>Order Details</h1>
+    <ul class="list-group">
+      <% sub_total_price = 0 %>
+      <% session[:cart].each do |item| %>
+        <% product = Product.find(item["id"]) %>
+        <% item_price = product.price * item["quantity"].to_i %>
+        <% sub_total_price += item_price %>
+        <li class="list-group-item"><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
+      <% end %>
+    </ul>
+
+    <p class="mt-3">Sub Total Price: $<%= sub_total_price %></p>
+
+    <p>GST: <%= (sub_total_price * @customer.province.gst).round(2) %></p>
+    <p>PST: <%= (sub_total_price * @customer.province.pst).round(2) %></p>
+    <p>HST: <%= (sub_total_price * @customer.province.hst).round(2) %></p>
+    <%= taxes = (sub_total_price * @customer.province.gst).round(2) + (sub_total_price * @customer.province.pst).round(2) + (sub_total_price * @customer.province.hst).round(2) %>
+    <p>Tax (<%= @customer.province.name %>) - <%= taxes %></p>
+
+    <p>Total Price (including tax): $<%= (sub_total_price + taxes).round(2) %></p>
+
+    <div data-turbo="false">
+      <%= button_to 'Proceed to Payment', proceed_to_payment_path, method: :get, class: "btn btn-primary" %>
+    </div>
   </div>
-  <div>
-    <%= form.label :city %>
-    <%= form.text_field :city, required: true %>
-  </div>
-  <div>
-    <%= form.label :postal_code %>
-    <%= form.text_field :postal_code, required: true %>
-  </div>
-  <div>
-    <%= form.label :province_id %>
-    <%= form.select :province_id, options_for_select(Province.all.map { |province| [province.name, province.id] }, @customer.province_id), prompt: 'Select Province', required: true %>
-  </div>
-  <p>Please note that updating the address will change the address in the record.</p>
-  <%= form.submit "Update Address" %>
-<% end %> <!-- Close the form tag here -->
-
-
-  <div class="notice"><%= notice %></div>
-
-
-<h1>Order Details</h1>
-<ul>
-  <% sub_total_price = 0 %>
-  <% session[:cart].each do |item| %>
-    <% product = Product.find(item["id"]) %>
-    <% item_price = product.price * item["quantity"].to_i %>
-    <% sub_total_price += item_price %>
-    <li><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
-  <% end %>
-</ul>
-<p>Sub Total Price: $<%= sub_total_price %></p>
-
-<p>GST: <%= (sub_total_price * @customer.province.gst).round(2) %></p>
-<p>PST: <%= (sub_total_price * @customer.province.pst).round(2) %></p>
-<p>HST: <%= (sub_total_price * @customer.province.hst).round(2) %></p>
-
-<%= taxes = (sub_total_price * @customer.province.gst).round(2) + (sub_total_price * @customer.province.pst).round(2) + (sub_total_price * @customer.province.hst).round(2) %>
-<p>Taxes - <%= taxes %></p>
-<p>Tax ( <%= @customer.province.name %> - <%= @customer.province.applicable %> % ): $<%= (sub_total_price * @customer.province.applicable).round(2) %></p>
-<p>Total Price (including tax): $<%= (sub_total_price * (1 + @customer.province.applicable)).round(2) %></p>
-
-<p>New Total Price (including tax): $<%= (sub_total_price * taxes).round(2) %></p>
-
-
-<div data-turbo="false">
-<%= button_to 'Proceed to Payment', proceed_to_payment_path, method: :get %>
-</div>
 <% else %>
 
 <% if session[:non_user_address].present? && session[:non_user_city].present? && session[:non_user_postal_code].present? && session[:non_user_province_id].present? %>
-<% if session[:change_address] == true %>
-    <%= render partial: 'shared/non_user_address_form', locals: { form: form_with(model: Customer.new) } %>
-<% else %>
+  <div class="container">
+    <% if session[:change_address] == true %>
+      <%= render partial: 'shared/non_user_address_form', locals: { form: form_with(model: Customer.new) } %>
+    <% else %>
+      <h2>Order Address</h2>
+      <p><strong>Address:</strong> <%= session[:non_user_address] %></p>
+      <p><strong>City:</strong> <%= session[:non_user_city] %></p>
+      <p><strong>Postal Code:</strong> <%= session[:non_user_postal_code] %></p>
+      <p><strong>Province:</strong> <%= Province.find_by_id(session[:non_user_province_id])&.name %></p>
 
+      <%= button_to 'Change Address', change_address_path, method: :get, class: "btn btn-primary" %>
 
-<h2>Order address</h2>
-  <p><strong>Address:</strong> <%= session[:non_user_address] %></p>
-  <p><strong>City:</strong> <%= session[:non_user_city] %></p>
-  <p><strong>Postal Code:</strong> <%= session[:non_user_postal_code] %></p>
-  <p><strong>Province:</strong> <%= Province.find_by_id(session[:non_user_province_id])&.name %></p>
-  
-<%= button_to 'Change Address', change_address_path, method: :get %>
+      <h1>Order Details</h1>
+      <ul class="list-group">
+        <% sub_total_price = 0 %>
+        <% session[:cart].each do |item| %>
+          <% product = Product.find(item["id"]) %>
+          <% item_price = product.price * item["quantity"].to_i %>
+          <% sub_total_price += item_price %>
+          <li class="list-group-item"><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
+        <% end %>
+      </ul>
 
-  <h1>Order Details</h1>
-<ul>
-  <% sub_total_price = 0 %>
-  <% session[:cart].each do |item| %>
-    <% product = Product.find(item["id"]) %>
-    <% item_price = product.price * item["quantity"].to_i %>
-    <% sub_total_price += item_price %>
-    <li><%= "#{product.name} - #{item["quantity"]} - $#{item_price}" %></li>
-  <% end %>
-</ul>
-  <% selected_province = Province.find_by_id(session[:non_user_province_id]) %>
-  <p>GST: <%= (sub_total_price * selected_province.gst).round(2) %></p>
-  <p>PST: <%= (sub_total_price * selected_province.pst).round(2) %></p>
-  <p>HST: <%= (sub_total_price * selected_province.hst).round(2) %></p>
+      <% selected_province = Province.find_by_id(session[:non_user_province_id]) %>
+      <p>GST: <%= (sub_total_price * selected_province.gst).round(2) %></p>
+      <p>PST: <%= (sub_total_price * selected_province.pst).round(2) %></p>
+      <p>HST: <%= (sub_total_price * selected_province.hst).round(2) %></p>
+      <p>Sub-Total Price: <%= sub_total_price %></p>
 
-  <% taxes = (sub_total_price * selected_province.gst).round(2) +
-            (sub_total_price * selected_province.pst).round(2) +
-            (sub_total_price * selected_province.hst).round(2) %>
-  <p>Taxes - <%= taxes %></p>
-  <p>Tax ( <%= selected_province.name %> - <%= selected_province.applicable %> % ): $<%= (sub_total_price * selected_province.applicable).round(2) %></p>
-  <p>Total Price (including tax): $<%= (sub_total_price * (1 + selected_province.applicable)).round(2) %></p>
-  <p>New Total Price (including tax): $<%= (sub_total_price * taxes).round(2) %></p>
+      <% taxes = (sub_total_price * selected_province.gst).round(2) +
+                (sub_total_price * selected_province.pst).round(2) +
+                (sub_total_price * selected_province.hst).round(2) %>
+      <p>Tax (<%= selected_province.name %>) - <%= taxes %></p>
+      <p>Total Price (including tax): $<%= (sub_total_price + taxes).round(2) %></p>
 
-  <div data-turbo="false">
-  <%= button_to 'Proceed to Payment', non_user_proceed_to_payment_path, method: :get %>
+      <div data-turbo="false">
+        <%= button_to 'Proceed to Payment', non_user_proceed_to_payment_path, method: :get, class: "btn btn-primary" %>
+      </div>
+    <% end %>
   </div>
-  <% end %>
 <% else %>
-  <%= render partial: 'shared/non_user_address_form', locals: { form: form } %>
-
-  <p>You need to provide your address to proceed with the order.</p>
-  <p>Please note that this order you cannot change the address that you are providing now.</p> 
-  <p>You will have to add address for every order since you are not registered customer.</p>
+  <div class="container">
+    <%= render partial: 'shared/non_user_address_form', locals: { form: form_with(model: Customer.new) } %>
+    <p>You need to provide your address to proceed with the order.</p>
+  </div>
 <% end %>
-
 <% end %>

@@ -59,7 +59,7 @@ class ProductsController < ApplicationController
     id = params[:id].to_i
     quantity = params[:quantity].to_i # Assuming quantity is passed as a parameter in the request
     session[:cart] << { id: id, quantity: quantity } unless session[:cart].any? { |item| item[:id] == id }
-    redirect_to products_path
+    redirect_back(fallback_location: root_path)
   end
   
 
@@ -73,7 +73,7 @@ class ProductsController < ApplicationController
   
     puts "Cart after removal: #{session[:cart].inspect}"
   
-    redirect_to products_path
+    redirect_back(fallback_location: root_path)
   end
   
 

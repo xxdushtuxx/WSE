@@ -4,7 +4,7 @@
 <p>Stock: <%= @product.stock %></p>
 <p>On Sale: <%= @product.sale_status %></p>
 <% if @product.sale_status == 'yes' %>
-  <p>Sale Price: <%= @product.price * 0.8 %> <strong>(20% discount!!!)</strong></p>
+  <p>Sale Price: <%= number_to_currency(@product.price * 0.8) %> <strong>(20% discount!!!)</strong></p>
 <% end %>
-<p>Price: <%= @product.price %></p>
+<p>Price: <%= number_to_currency(@product.price) %></p>
 
